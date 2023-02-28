@@ -20,6 +20,7 @@
 // NOLINTBEGIN(readability-identifier-naming)
 
 #include "lanelet2_extension/regulatory_elements/autoware_traffic_light.hpp"
+#include "lanelet2_extension/regulatory_elements/bus_stop.hpp"
 #include "lanelet2_extension/regulatory_elements/detection_area.hpp"
 #include "lanelet2_extension/regulatory_elements/no_stopping_area.hpp"
 #include "lanelet2_extension/regulatory_elements/speed_bump.hpp"
@@ -43,6 +44,7 @@ using AutowareTrafficLightConstPtr = std::shared_ptr<const lanelet::autoware::Au
 using DetectionAreaConstPtr = std::shared_ptr<const lanelet::autoware::DetectionArea>;
 using NoStoppingAreaConstPtr = std::shared_ptr<const lanelet::autoware::NoStoppingArea>;
 using SpeedBumpConstPtr = std::shared_ptr<const lanelet::autoware::SpeedBump>;
+using BusStopConstPtr = std::shared_ptr<const lanelet::autoware::BusStop>;
 }  // namespace lanelet
 
 namespace lanelet::utils::query
@@ -122,6 +124,13 @@ std::vector<lanelet::NoStoppingAreaConstPtr> noStoppingAreas(
  * @return         [speed bumps that are associated with input lanelets]
  */
 std::vector<lanelet::SpeedBumpConstPtr> speedBumps(const lanelet::ConstLanelets & lanelets);
+
+/**
+ * [busStops extracts Bus Stop regulatory elements from lanelets]
+ * @param lanelets [input lanelets]
+ * @return         [bus stops that are associated with input lanelets]
+ */
+std::vector<lanelet::BusStopConstPtr> busStops(const lanelet::ConstLanelets & lanelets);
 
 // query all polygons that has given type in lanelet2 map
 lanelet::ConstPolygons3d getAllPolygonsByType(

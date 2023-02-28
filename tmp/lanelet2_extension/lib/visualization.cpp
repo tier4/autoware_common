@@ -791,6 +791,81 @@ visualization_msgs::msg::MarkerArray visualization::speedBumpsAsMarkerArray(
   return marker_array;
 }
 
+visualization_msgs::msg::MarkerArray visualization::busStopsAsMarkerArray(
+  const std::vector<lanelet::BusStopConstPtr> & da_reg_elems, const std_msgs::msg::ColorRGBA & c,
+  const rclcpp::Duration & duration)
+{
+  visualization_msgs::msg::MarkerArray marker_array;
+  visualization_msgs::msg::Marker marker;
+  visualization_msgs::msg::Marker line_marker;
+
+  if (da_reg_elems.empty()) {
+    return marker_array;
+  }
+
+  marker.header.frame_id = "map";
+  marker.header.stamp = rclcpp::Time();
+  marker.frame_locked = true;
+  marker.ns = "bus_stop";
+  marker.id = 0;
+  marker.type = visualization_msgs::msg::Marker::TRIANGLE_LIST;
+  marker.lifetime = duration;
+  marker.pose.position.x = 0.0;  // p.x();
+  marker.pose.position.y = 0.0;  // p.y();
+  marker.pose.position.z = 0.0;  // p.z();
+  marker.pose.orientation.x = 0.0;
+  marker.pose.orientation.y = 0.0;
+  marker.pose.orientation.z = 0.0;
+  marker.pose.orientation.w = 1.0;
+  marker.scale.x = 1.0;
+  marker.scale.y = 1.0;
+  marker.scale.z = 1.0;
+  marker.color.r = 1.0f;
+  marker.color.g = 0.5f;
+  marker.color.b = 0.0f;
+  marker.color.a = 0.999;
+
+  std_msgs::msg::ColorRGBA line_c;
+  line_c.r = 0.5;
+  line_c.g = 0.5;
+  line_c.b = 0.5;
+  line_c.a = 0.999;
+  visualization::initLineStringMarker(&line_marker, "map", "bus_stop_stopline", line_c);
+
+  for (const auto & da_reg_elem : da_reg_elems) {
+    marker.points.clear();
+    marker.colors.clear();
+    marker.id = static_cast<int32_t>(da_reg_elem->id());
+
+    // area visualization
+    const auto bus_stops = da_reg_elem->busStops();
+    for (const auto & bus_stop : bus_stops) {
+      geometry_msgs::msg::Polygon geom_poly;
+      utils::conversion::toGeomMsgPoly(bus_stop, &geom_poly);
+
+      std::vector<geometry_msgs::msg::Polygon> triangles;
+      polygon2Triangle(geom_poly, &triangles);
+
+      for (auto tri : triangles) {
+        geometry_msgs::msg::Point tri0[3];
+
+        for (int i = 0; i < 3; i++) {
+          utils::conversion::toGeomMsgPt(tri.points[i], &tri0[i]);
+          marker.points.push_back(tri0[i]);
+          marker.colors.push_back(c);
+        }
+      }  // for triangles0
+    }    // for bus stops
+    marker_array.markers.push_back(marker);
+
+    // stop line visualization
+    visualization::pushLineStringMarker(&line_marker, da_reg_elem->stopLine(), line_c, 0.5);
+  }  // for regulatory elements
+
+  marker_array.markers.push_back(line_marker);
+  return marker_array;
+}
+
 visualization_msgs::msg::MarkerArray visualization::pedestrianMarkingsAsMarkerArray(
   const lanelet::ConstLineStrings3d & pedestrian_markings, const std_msgs::msg::ColorRGBA & c)
 {
