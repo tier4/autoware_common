@@ -792,14 +792,14 @@ visualization_msgs::msg::MarkerArray visualization::speedBumpsAsMarkerArray(
 }
 
 visualization_msgs::msg::MarkerArray visualization::busStopsAsMarkerArray(
-  const std::vector<lanelet::BusStopConstPtr> & da_reg_elems, const std_msgs::msg::ColorRGBA & c,
+  const std::vector<lanelet::BusStopConstPtr> & bs_reg_elems, const std_msgs::msg::ColorRGBA & c,
   const rclcpp::Duration & duration)
 {
   visualization_msgs::msg::MarkerArray marker_array;
   visualization_msgs::msg::Marker marker;
   visualization_msgs::msg::Marker line_marker;
 
-  if (da_reg_elems.empty()) {
+  if (bs_reg_elems.empty()) {
     return marker_array;
   }
 
@@ -832,13 +832,13 @@ visualization_msgs::msg::MarkerArray visualization::busStopsAsMarkerArray(
   line_c.a = 0.999;
   visualization::initLineStringMarker(&line_marker, "map", "bus_stop_stopline", line_c);
 
-  for (const auto & da_reg_elem : da_reg_elems) {
+  for (const auto & bs_reg_elem : bs_reg_elems) {
     marker.points.clear();
     marker.colors.clear();
-    marker.id = static_cast<int32_t>(da_reg_elem->id());
+    marker.id = static_cast<int32_t>(bs_reg_elem->id());
 
     // area visualization
-    const auto bus_stops = da_reg_elem->busStops();
+    const auto bus_stops = bs_reg_elem->busStops();
     for (const auto & bus_stop : bus_stops) {
       geometry_msgs::msg::Polygon geom_poly;
       utils::conversion::toGeomMsgPoly(bus_stop, &geom_poly);
@@ -859,7 +859,7 @@ visualization_msgs::msg::MarkerArray visualization::busStopsAsMarkerArray(
     marker_array.markers.push_back(marker);
 
     // stop line visualization
-    visualization::pushLineStringMarker(&line_marker, da_reg_elem->stopLine(), line_c, 0.5);
+    visualization::pushLineStringMarker(&line_marker, bs_reg_elem->stopLine(), line_c, 0.5);
   }  // for regulatory elements
 
   marker_array.markers.push_back(line_marker);

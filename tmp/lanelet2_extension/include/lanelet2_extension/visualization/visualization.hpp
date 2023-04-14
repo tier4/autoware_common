@@ -243,12 +243,12 @@ visualization_msgs::msg::MarkerArray speedBumpsAsMarkerArray(
 
 /**
  * [busStopsAsMarkerArray creates marker array to visualize bus stops]
- * @param  da_reg_elems [bus stop regulatory elements]
+ * @param  bs_reg_elems [bus stop regulatory elements]
  * @param  c            [color of the marker]
  * @param  duration     [lifetime of the marker]
  */
 visualization_msgs::msg::MarkerArray busStopsAsMarkerArray(
-  const std::vector<lanelet::BusStopConstPtr> & da_reg_elems, const std_msgs::msg::ColorRGBA & c,
+  const std::vector<lanelet::BusStopConstPtr> & bs_reg_elems, const std_msgs::msg::ColorRGBA & c,
   const rclcpp::Duration & duration = rclcpp::Duration(0, 0));
 
 /**
