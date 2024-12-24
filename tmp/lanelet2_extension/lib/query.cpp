@@ -250,7 +250,8 @@ std::vector<lanelet::NoParkingAreaConstPtr> query::noParkingAreas(
   return no_pa_reg_elems;
 }
 
-std::vector<lanelet::BusStopAreaConstPtr> busStopAreas(const lanelet::ConstLanelets & lanelets)
+std::vector<lanelet::BusStopAreaConstPtr> query::busStopAreas(
+  const lanelet::ConstLanelets & lanelets)
 {
   std::vector<lanelet::BusStopAreaConstPtr> bus_stop_area_reg_elems;
   std::set<lanelet::Id> found_ids;
